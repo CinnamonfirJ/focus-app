@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusGuard - Distraction Blocker</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🔒</div>
+                <h1>Focus<span>Guard</span></h1>
+            </div>
+            <div class="tabs">
+                <div class="tab active">Focus Mode</div>
+                
+            </div>
+        </header>
+        
+        <main>
+            <div class="sidebar">
+                <div class="timer-section">
+                    <h2>⏱️ Set Focus Duration</h2>
+                    <div class="timer-input">
+                        <input type="number" class="time-input" value="25" min="1" max="240">
+                        <div class="btn btn-secondary">+</div>
+                        <div class="btn btn-secondary">-</div>
+                    </div>
+                    
+                    <div class="preset-times">
+                        <div class="preset-time">15</div>
+                        <div class="preset-time active">25</div>
+                        <div class="preset-time">45</div>
+                        <div class="preset-time">60</div>
+                        <div class="preset-time">90</div>
+                        <div class="preset-time">120</div>
+                    </div>
+                    
+                    <div class="timer-display">25:00</div>
+                    
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <div class="status-text">Focus session not started</div>
+                    </div>
+                    
+                    <div class="btn btn-primary start">🚀 Start Focus Session</div>
+                    <div class="btn btn-secondary stop">⏹️ Stop Session</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="section-title">
+                    <div class="icon">📱</div>
+                    <h2>Select Apps to Allow</h2>
+                </div>
+                
+                <p style="color: #6c757d; margin-bottom: 20px;">
+                    Select applications you want to work with. All other apps will be blocked during your focus session.
+                </p>
+                
+                <div class="apps-grid" id="apps-container">
+                    <!-- Apps will be loaded dynamically -->
+                    <div class="loading-message">Loading applications...</div>
+                </div>
+                
+                <div class="add-app-btn">
+                    <div>+</div>
+                    <div>Add Application</div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div>FocusGuard v1.0</div>
+            <div>⏰ Your productivity companion</div>
+        </footer>
+    </div>
+
+    <script>
+        // Global variables
+        let api;
+        let timerInterval;
+        
+        // Wait for pywebview to initialize
+        window.addEventListener('pywebviewready', async () => {
+            try {
+                api = window.pywebview.api;
+                console.log("API initialized");
+                
+                // Initialize UI components
+                initTimer();
+                await loadAppList();
+            } catch (error) {
+                showNotification(`Initialization error: ${error.message || error}`, 'error');
+                console.error('Initialization error:', error);
+            }
+        });
+        
+        // Initialize timer functionality
+        function initTimer() {
+            const timeInput = document.querySelector('.time-input');
+            const presetTimes = document.querySelectorAll('.preset-time');
+            const timerDisplay = document.querySelector('.timer-display');
+            const startBtn = document.querySelector('.start');
+            const stopBtn = document.querySelector('.stop');
+            const statusDot = document.querySelector('.status-dot');
+            const statusText = document.querySelector('.status-text');
+        
+            // Update timer display
+            function updateTimerDisplay() {
+                let minutes = parseInt(timeInput.value) || 25;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:00`;
+            }
+            
+            // Preset time selection
+            presetTimes.forEach(time => {
+                time.addEventListener('click', () => {
+                    presetTimes.forEach(t => t.classList.remove('active'));
+                    time.classList.add('active');
+                    timeInput.value = time.textContent;
+                    updateTimerDisplay();
+                });
+            });
+            
+            // Time input changes
+            timeInput.addEventListener('input', updateTimerDisplay);
+            
+            // Start session
+            startBtn.addEventListener('click', async () => {
+                const selectedApps = getSelectedApps();
+                const duration = parseInt(timeInput.value) || 25;
+                
+                if (selectedApps.length === 0) {
+                    showNotification('Select at least one app to start session', 'error');
+                    return;
+                }
+                
+                try {
+                    const result = await api.start_session(selectedApps, duration);
+                    showNotification(result, 'success');
+                    
+                    // Update UI
+                    stopBtn.style.display = 'flex';
+                    startBtn.style.display = 'none';
+                    
+                    statusDot.classList.add('active');
+                    statusText.textContent = 'Focus session in progress';
+                    
+                    // Start timer countdown
+                    startTimer(duration);
+                } catch (error) {
+                    showNotification(`Error: ${error.message || error}`, 'error');
+                    console.error('Session start error:', error);
+                }
+            });
+            
+            // Stop session
+            stopBtn.addEventListener('click', async () => {
+                console.log("stop clicked")
+                try {
+                    const result = await api.stop_session();
+                    showNotification(result, 'info');
+                    
+                    // Update UI
+                    startBtn.style.display = 'flex';
+                    stopBtn.style.display = 'none';
+                    statusDot.classList.remove('active');
+                    statusText.textContent = 'Focus session stopped';
+                    clearInterval(timerInterval);
+                    updateTimerDisplay();
+                } catch (error) {
+                    showNotification(`Error: ${error.message || error}`, 'error');
+                    console.error('Session stop error:', error);
+                }
+            });
+            
+            // Timer functions
+            function startTimer(minutes) {
+                let timeLeft = minutes * 60;
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        stopBtn.click(); // Automatically stop session
+                        statusText.textContent = 'Focus session completed!';
+                        return;
+                    }
+                    
+                    const mins = Math.floor(timeLeft / 60);
+                    const secs = timeLeft % 60;
+                    timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+            
+            // Initial display
+            updateTimerDisplay();
+        }
+        
+        // Load app list from backend
+        async function loadAppList() {
+            try {
+                const appList = await api.get_app_list();
+                populateAppGrid(appList);
+            } catch (error) {
+                showNotification(`Failed to load apps: ${error.message || error}`, 'error');
+                console.error('App load error:', error);
+                document.querySelector('.loading-message').textContent = 
+                    "Failed to load applications. Please restart the app.";
+            }
+        }
+        
+        // Populate app grid
+        function populateAppGrid(apps) {
+            const appsContainer = document.getElementById('apps-container');
+            appsContainer.innerHTML = '';
+            
+            apps.forEach(app => {
+                const appCard = document.createElement('div');
+                appCard.className = 'app-card';
+                appCard.innerHTML = `
+                    <div class="app-icon">📱</div>
+                    <div class="app-name">${app}</div>
+                `;
+                appCard.addEventListener('click', () => {
+                    appCard.classList.toggle('selected');
+                });
+                appsContainer.appendChild(appCard);
+            });
+        }
+        
+        // Get selected apps
+        function getSelectedApps() {
+            return Array.from(document.querySelectorAll('.app-card.selected'))
+                .map(card => card.querySelector('.app-name').textContent);
+        }
+        
+        // Add custom app
+        document.querySelector('.add-app-btn').addEventListener('click', async () => {
+            const displayName = prompt('Enter application display name:');
+            if (!displayName) return;
+            
+            const processName = prompt('Enter process name (e.g., chrome.exe):');
+            if (!processName) return;
+            
+            try {
+                const success = await api.add_custom_app(displayName, processName);
+                if (success) {
+                    showNotification(`${displayName} added successfully!`, 'success');
+                    // Reload app list
+                    await loadAppList();
+                }
+            } catch (error) {
+                showNotification(`Error: ${error.message || error}`, 'error');
+                console.error('Add app error:', error);
+            }
+        });
+        
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
