@@ -1,2 +1,47 @@
-2025-07-27 16:00:42,303 - INFO - Loaded 14 app mappings
-2025-07-27 16:00:42,303 - INFO - FocusGuard initialized
+2025-08-01 07:44:08,044 - INFO - Loaded 14 app mappings
+2025-08-01 07:44:08,044 - INFO - FocusGuard initialized
+2025-08-01 07:44:30,224 - INFO - Session setup | Focus: 1 mins, Break: 1 mins
+2025-08-01 07:44:30,224 - INFO - Allowed: ['code.exe', 'chrome.exe']
+2025-08-01 07:44:30,225 - INFO - Blocking: ['EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'chrome.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe']
+2025-08-01 07:44:30,226 - INFO - Process monitoring thread started.
+2025-08-01 07:44:30,238 - INFO - Session cycle started.
+2025-08-01 07:44:30,253 - INFO - Entering Focus Session.
+2025-08-01 07:44:30,254 - INFO - Starting focus timer for 1 minutes.
+2025-08-01 07:44:30,818 - DEBUG - Terminated: WhatsApp.exe (PID: 9872)
+2025-08-01 07:44:30,818 - INFO - Blocked: WhatsApp.exe
+2025-08-01 07:44:30,824 - DEBUG - Terminated: chrome.exe (PID: 4948)
+2025-08-01 07:44:30,824 - INFO - Blocked: chrome.exe
+2025-08-01 07:44:31,731 - INFO - Focus session started successfully.
+2025-08-01 07:44:35,834 - DEBUG - Terminated: WhatsApp.exe (PID: 2464)
+2025-08-01 07:44:35,834 - INFO - Blocked: WhatsApp.exe
+2025-08-01 07:44:35,840 - DEBUG - Terminated: chrome.exe (PID: 8588)
+2025-08-01 07:44:35,840 - INFO - Blocked: chrome.exe
+2025-08-01 07:44:40,858 - DEBUG - Terminated: WhatsApp.exe (PID: 7936)
+2025-08-01 07:44:40,860 - INFO - Blocked: WhatsApp.exe
+2025-08-01 07:44:40,867 - DEBUG - Terminated: chrome.exe (PID: 8884)
+2025-08-01 07:44:40,868 - INFO - Blocked: chrome.exe
+2025-08-01 07:44:45,892 - DEBUG - Terminated: chrome.exe (PID: 13572)
+2025-08-01 07:44:45,895 - INFO - Blocked: chrome.exe
+2025-08-01 07:44:50,937 - DEBUG - Terminated: EXCEL.EXE (PID: 15180)
+2025-08-01 07:44:50,938 - INFO - Blocked: EXCEL.EXE
+2025-08-01 07:45:15,997 - DEBUG - Terminated: WhatsApp.exe (PID: 10616)
+2025-08-01 07:45:15,998 - INFO - Blocked: WhatsApp.exe
+2025-08-01 07:45:30,395 - INFO - Focus session completed.
+2025-08-01 07:45:30,395 - INFO - Entering Break Session.
+2025-08-01 07:45:30,396 - INFO - Starting break timer for 1 minutes.
+2025-08-01 07:46:30,436 - INFO - Break session completed. Returning to Focus.
+2025-08-01 07:46:30,436 - INFO - Entering Focus Session.
+2025-08-01 07:46:30,437 - INFO - Starting focus timer for 1 minutes.
+2025-08-01 07:46:31,079 - DEBUG - Terminated: WhatsApp.exe (PID: 17548)
+2025-08-01 07:46:31,079 - INFO - Blocked: WhatsApp.exe
+2025-08-01 07:47:30,476 - INFO - Focus session completed.
+2025-08-01 07:47:30,476 - INFO - Entering Break Session.
+2025-08-01 07:47:30,477 - INFO - Starting break timer for 1 minutes.
+2025-08-01 07:48:30,519 - INFO - Break session completed. Returning to Focus.
+2025-08-01 07:48:30,520 - INFO - Entering Focus Session.
+2025-08-01 07:48:30,521 - INFO - Starting focus timer for 1 minutes.
+2025-08-01 07:49:16,330 - DEBUG - Terminated: WhatsApp.exe (PID: 15316)
+2025-08-01 07:49:16,331 - INFO - Blocked: WhatsApp.exe
+2025-08-01 07:49:30,562 - INFO - Focus session completed.
+2025-08-01 07:49:30,562 - INFO - Entering Break Session.
+2025-08-01 07:49:30,563 - INFO - Starting break timer for 1 minutes.

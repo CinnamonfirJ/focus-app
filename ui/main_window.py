@@ -91,6 +91,23 @@ class MainWindow(QMainWindow):
             btn.clicked.connect(lambda checked, t=time_val: self.time_input.setValue(t))
             presets_layout.addWidget(btn, i//3, i%3)
         sidebar_layout.addLayout(presets_layout)
+
+        # Add a new section for Break time
+        break_label = QLabel("☕ Set Break Duration")
+        break_label.setFont(QFont("Segoe UI", 12, QFont.Bold))
+        sidebar_layout.addWidget(break_label)
+
+        break_time_layout = QHBoxLayout()
+        self.break_time_input = QSpinBox()
+        self.break_time_input.setRange(1, 60) # A good break is not too long
+        self.break_time_input.setValue(5) # 5 minutes is a nice start
+        self.break_time_input.setFixedHeight(40)
+        break_time_layout.addWidget(self.break_time_input)
+        
+        # You can add plus/minus buttons here for the break time too!
+        # ... (similar to your existing code)
+
+        sidebar_layout.addLayout(break_time_layout)
         
         # Timer display
 
@@ -243,13 +260,14 @@ class MainWindow(QMainWindow):
     def start_session(self):
         selected_apps = self.get_selected_apps()
         duration = self.time_input.value()
+        break_duration = self.break_time_input.value()
         
         if not selected_apps:
             QMessageBox.warning(self, "Selection Required", 
                                "Select at least one app to start session")
             return
                 
-        self.focus_guard.start_session(selected_apps, duration)
+        self.focus_guard.start_session(selected_apps, duration, break_duration)
         
     def stop_session(self):
         self.focus_guard.stop_session()
