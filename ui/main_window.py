@@ -36,17 +36,18 @@ class MainWindow(QMainWindow):
         sidebar_layout.setContentsMargins(20, 20, 20, 20)
         sidebar_layout.setSpacing(15)
         
-        # Timer controls
-        timer_label = QLabel("⏱️ Set Focus Duration")
+        # Timer controls - UPDATED FOR NEW LOGIC
+        timer_label = QLabel("🕒 Total Work Time")
         timer_label.setFont(QFont("Segoe UI", 12, QFont.Bold))
         sidebar_layout.addWidget(timer_label)
         
         # Time input
         time_layout = QHBoxLayout()
         self.time_input = QSpinBox()
-        self.time_input.setRange(1, 240)
-        self.time_input.setValue(25)
+        self.time_input.setRange(5, 240)  # Minimum 5 minutes
+        self.time_input.setValue(30)  # Default 30 minutes total
         self.time_input.setFixedHeight(40)
+        self.time_input.valueChanged.connect(self.update_calculated_times)
         time_layout.addWidget(self.time_input)
         
         plus_btn = QPushButton("+")
@@ -61,7 +62,7 @@ class MainWindow(QMainWindow):
         sidebar_layout.addLayout(time_layout)
         
         # Preset times
-        presets = [15, 25, 45, 60, 90, 120]
+        presets = [15, 30, 45, 60, 90, 120]
         presets_layout = QGridLayout()
         
         for i, time_val in enumerate(presets):
@@ -86,37 +87,49 @@ class MainWindow(QMainWindow):
         }
         """
    )
-            if time_val == 25:
+            if time_val == 30:  # Changed default to 30
                 btn.setChecked(True)
             btn.clicked.connect(lambda checked, t=time_val: self.time_input.setValue(t))
             presets_layout.addWidget(btn, i//3, i%3)
         sidebar_layout.addLayout(presets_layout)
 
-        # Add a new section for Break time
-        break_label = QLabel("☕ Set Break Duration")
+        # Break time section
+        break_label = QLabel("☕ Break Duration")
         break_label.setFont(QFont("Segoe UI", 12, QFont.Bold))
         sidebar_layout.addWidget(break_label)
 
         break_time_layout = QHBoxLayout()
         self.break_time_input = QSpinBox()
-        self.break_time_input.setRange(1, 60) # A good break is not too long
-        self.break_time_input.setValue(5) # 5 minutes is a nice start
+        self.break_time_input.setRange(1, 30) # Max 30 minutes break
+        self.break_time_input.setValue(5) # 5 minutes default
         self.break_time_input.setFixedHeight(40)
+        self.break_time_input.valueChanged.connect(self.update_calculated_times)
         break_time_layout.addWidget(self.break_time_input)
         
-        # You can add plus/minus buttons here for the break time too!
-        # ... (similar to your existing code)
+        break_plus_btn = QPushButton("+")
+        break_plus_btn.setFixedSize(40, 40)
+        break_plus_btn.clicked.connect(lambda: self.break_time_input.setValue(self.break_time_input.value() + 1))
+        break_time_layout.addWidget(break_plus_btn)
+        
+        break_minus_btn = QPushButton("-")
+        break_minus_btn.setFixedSize(40, 40)
+        break_minus_btn.clicked.connect(lambda: self.break_time_input.setValue(self.break_time_input.value() - 1))
+        break_time_layout.addWidget(break_minus_btn)
 
         sidebar_layout.addLayout(break_time_layout)
         
+        # NEW: Display calculated focus times
+        self.calculation_label = QLabel()
+        self.calculation_label.setFont(QFont("Segoe UI", 10))
+        self.calculation_label.setWordWrap(True)
+        self.calculation_label.setStyleSheet("color: #2c3e50; background-color: rgba(255,255,255,0.8); padding: 8px; border-radius: 5px;")
+        sidebar_layout.addWidget(self.calculation_label)
+        
         # Timer display
-
-        self.timer_display = QLabel("25:00")
+        self.timer_display = QLabel("12:30")
         self.timer_display.setAlignment(Qt.AlignCenter)
         self.timer_display.setFont(QFont("Courier New", 48, QFont.Bold))
         sidebar_layout.addWidget(self.timer_display)
-        
-      
         
         # Status indicator
         status_layout = QHBoxLayout()
@@ -180,7 +193,7 @@ class MainWindow(QMainWindow):
         # Description
         desc = QLabel(
             "Select applications you want to work with. All other apps will be "
-            "blocked during your focus session."
+            "blocked during your focus sessions."
         )
         desc.setWordWrap(True)
         content_layout.addWidget(desc)
@@ -228,8 +241,39 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(sidebar)
         main_layout.addWidget(content)
         
-        # Load apps
+        # Load apps and initialize calculated times
         self.load_apps()
+        self.update_calculated_times()
+        
+    def update_calculated_times(self):
+        """Update the display of calculated focus times"""
+        total_time = self.time_input.value()
+        break_time = self.break_time_input.value()
+        
+        if total_time <= break_time:
+            self.calculation_label.setText("⚠️ Total time must be greater than break time!")
+            self.calculation_label.setStyleSheet("color: #e74c3c; background-color: rgba(255,255,255,0.8); padding: 8px; border-radius: 5px;")
+            self.start_btn.setEnabled(False)
+        else:
+            focus_time = total_time - break_time
+            # Round to nearest 0.5 minutes to avoid weird decimals
+            single_focus = round((focus_time / 2) * 2) / 2
+            
+            self.calculation_label.setText(
+                f"📊 Session Plan:\n"
+                f"• Focus 1: {single_focus:.1f} min\n"
+                f"• Break: {break_time} min\n"
+                f"• Focus 2: {single_focus:.1f} min\n"
+                f"• Total: {total_time} min"
+            )
+            self.calculation_label.setStyleSheet("color: #2c3e50; background-color: rgba(255,255,255,0.8); padding: 8px; border-radius: 5px;")
+            self.start_btn.setEnabled(True)
+            
+        # Update timer display to show first focus session time
+        if total_time > break_time:
+            focus_time = total_time - break_time
+            single_focus_minutes = round((focus_time / 2) * 2) / 2
+            self.update_timer_display(int(single_focus_minutes), 0)
         
     def connect_signals(self):
         self.focus_guard.session_started.connect(self.on_session_started)
@@ -243,6 +287,8 @@ class MainWindow(QMainWindow):
         row, col = 0, 0
         for app in app_list:
             card = AppCard(app)
+            # Connect the selection changed signal
+            card.selectionChanged.connect(self.on_app_selection_changed)
             self.apps_grid.addWidget(card, row, col)
             col += 1
             if col > 2:  # 3 columns
@@ -259,47 +305,24 @@ class MainWindow(QMainWindow):
         
     def start_session(self):
         selected_apps = self.get_selected_apps()
-        duration = self.time_input.value()
+        total_time = self.time_input.value()
         break_duration = self.break_time_input.value()
         
         if not selected_apps:
             QMessageBox.warning(self, "Selection Required", 
                                "Select at least one app to start session")
             return
+        
+        if total_time <= break_duration:
+            QMessageBox.warning(self, "Invalid Time Settings", 
+                               "Total work time must be greater than break time")
+            return
                 
-        self.focus_guard.start_session(selected_apps, duration, break_duration)
+        self.focus_guard.start_session(selected_apps, total_time, break_duration)
         
     def stop_session(self):
         self.focus_guard.stop_session()
         
-    def add_custom_app(self):
-        # Implementation similar to original
-        pass
-        
-    def on_session_started(self, message):
-        self.start_btn.setVisible(False)
-        self.stop_btn.setVisible(True)
-        self.status_dot.setStyleSheet("background-color: #2ecc71; border-radius: 6px;")
-        self.status_text.setText("Focus session in progress")
-        QMessageBox.information(self, "Session Started", message)
-        
-    def on_session_stopped(self, message):
-        self.start_btn.setVisible(True)
-        self.stop_btn.setVisible(False)
-        self.status_dot.setStyleSheet("background-color: #e74c3c; border-radius: 6px;")
-        self.status_text.setText("Focus session stopped")
-        self.time_input.setValue(25)
-        self.update_timer_display(25, 0)
-        QMessageBox.information(self, "Session Stopped", message)
-        
-    def on_app_blocked(self, app_name):
-        # Could show a notification or update UI
-        print(f"Blocked: {app_name}")
-        
-    def update_timer_display(self, mins, secs):
-        self.timer_display.setText(f"{mins:02d}:{secs:02d}")
-    
-    # Add to ui/main_window.py
     def add_custom_app(self):
         """Prompt user to add custom application"""
         display_name, ok1 = QInputDialog.getText(
@@ -324,7 +347,7 @@ class MainWindow(QMainWindow):
                 "Success", 
                 f"Added {display_name} successfully!"
             )
-        # Clear existing apps and reload
+            # Clear existing apps and reload
             self.clear_apps_grid()
             self.load_apps()
         else:
@@ -340,21 +363,31 @@ class MainWindow(QMainWindow):
             child = self.apps_grid.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
-
-    def load_apps(self):
-        app_list = self.focus_guard.get_app_list()
-        row, col = 0, 0
-        for app in app_list:
-            card = AppCard(app)
         
-            # Connect the selection changed signal
-            card.selectionChanged.connect(self.on_app_selection_changed)
+    def on_session_started(self, message):
+        self.start_btn.setVisible(False)
+        self.stop_btn.setVisible(True)
+        self.status_dot.setStyleSheet("background-color: #2ecc71; border-radius: 6px;")
+        self.status_text.setText("Focus session in progress")
+        QMessageBox.information(self, "Session Started", message)
         
-            self.apps_grid.addWidget(card, row, col)
-            col += 1
-            if col > 2:  # 3 columns
-                col = 0
-                row += 1
+    def on_session_stopped(self, message):
+        self.start_btn.setVisible(True)
+        self.stop_btn.setVisible(False)
+        self.status_dot.setStyleSheet("background-color: #e74c3c; border-radius: 6px;")
+        self.status_text.setText("Focus session stopped")
+        # Reset to show first focus session time
+        self.update_calculated_times()
+        QMessageBox.information(self, "Session Stopped", message)
+        
+    def on_app_blocked(self, app_name):
+        # Could show a notification or update UI
+        print(f"Blocked: {app_name}")
+        
+    def update_timer_display(self, mins, secs):
+        """Update timer display with proper formatting"""
+        self.timer_display.setText(f"{int(mins):02d}:{int(secs):02d}")
+    
     def on_app_selection_changed(self, is_selected):
         """Handle when an app card is selected/deselected"""
         # We can use this to update UI state if needed

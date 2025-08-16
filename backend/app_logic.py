@@ -34,9 +34,13 @@ class FocusGuard(QObject):
         self.stop_event = threading.Event()
         self.load_app_mappings()
         
-        self.focus_duration = 0 # Stores the set focus duration
-        self.break_duration = 0 # Stores the set break duration
-        self.allowed_apps_list = [] # Stores the list of display names for allowed apps
+        # Updated timer variables for new logic
+        self.total_work_time = 0  # Total time user wants to work
+        self.break_duration = 0   # Break duration
+        self.focus_session_time = 0  # Calculated focus time (total - break)
+        self.single_focus_duration = 0  # Each focus session (focus_session_time / 2)
+        self.allowed_apps_list = []
+        self.current_session_part = 1  # Track which part of session we're in (1, 2, or 3)
 
         logging.info("FocusGuard initialized")
 
@@ -50,8 +54,8 @@ class FocusGuard(QObject):
             logging.error(f"Error loading process map: {e}")
             self.app_mappings = {}
 
-    def start_session(self, allowed_apps, focus_duration, break_duration):
-        """Start focus session with allowed apps and duration, including break logic."""
+    def start_session(self, allowed_apps, total_work_time, break_duration):
+        """Start focus session with new timer logic: (Focus/2) → Break → (Focus/2)"""
         if self.is_active:
             logging.warning("Session already active, cannot start new one.")
             self.session_started.emit("Session already active.")
@@ -62,27 +66,47 @@ class FocusGuard(QObject):
             self.session_started.emit("Select at least one app to start session.")
             return "Select at least one app to start session."
         
+        # Validate that total work time is greater than break time
+        if total_work_time <= break_duration:
+            error_msg = "Total work time must be greater than break time."
+            logging.warning(error_msg)
+            self.session_started.emit(error_msg)
+            return error_msg
+        
         try:
-            self.focus_duration = focus_duration
+            # Calculate the new timer values
+            self.total_work_time = total_work_time
             self.break_duration = break_duration
-            self.allowed_apps_list = allowed_apps # Store for use in run_timer loop
+            self.focus_session_time = total_work_time - break_duration
+            # Round to nearest 0.5 minutes to avoid weird decimals
+            self.single_focus_duration = round((self.focus_session_time / 2) * 2) / 2
+            self.allowed_apps_list = allowed_apps
+            self.current_session_part = 1
             
-            # Initial setup for allowed and blocked processes based on selected apps
-            self.allowed_processes = [
-                self.app_mappings[app] for app in self.allowed_apps_list
-                if app in self.app_mappings
-            ]
-            self.block_list = [
-                process for display, process in self.app_mappings.items()
-                if display not in self.allowed_apps_list
-            ]
+            # Setup allowed and blocked processes
+            self.allowed_processes = []
+            self.block_list = []
             
-            logging.info(f"Session setup | Focus: {focus_duration} mins, Break: {break_duration} mins")
+            # Get all unique process names for allowed apps
+            allowed_process_names = set()
+            for app in self.allowed_apps_list:
+                if app in self.app_mappings:
+                    process_name = self.app_mappings[app]
+                    self.allowed_processes.append(process_name)
+                    allowed_process_names.add(process_name.lower())
+            
+            # Create block list - only include processes NOT in allowed list
+            for display, process in self.app_mappings.items():
+                if process.lower() not in allowed_process_names:
+                    self.block_list.append(process)
+            
+            logging.info(f"Session setup | Total Work: {total_work_time} mins, Break: {break_duration} mins")
+            logging.info(f"Focus Session Time: {self.focus_session_time} mins, Each Focus: {self.single_focus_duration} mins")
             logging.info(f"Allowed: {self.allowed_processes}")
             logging.info(f"Blocking: {self.block_list}")
             
             self.is_active = True
-            self.is_focus_session = True # Start with focus session
+            self.is_focus_session = True # Start with first focus session
             self.is_active_monitoring = True # Monitoring is active during focus
             self.stop_event.clear()
             
@@ -109,12 +133,13 @@ class FocusGuard(QObject):
 
     def _run_single_timer(self, duration_minutes, session_type):
         """Internal function to run a single timer session (focus or break)."""
-        total_seconds = duration_minutes * 60
-        logging.info(f"Starting {session_type} timer for {duration_minutes} minutes.")
+        # Convert to whole seconds to avoid float issues
+        total_seconds = int(duration_minutes * 60)
+        logging.info(f"Starting {session_type} timer for {duration_minutes} minutes ({total_seconds} seconds).")
         
         while total_seconds > 0 and self.is_active and not self.stop_event.is_set():
             mins, secs = divmod(total_seconds, 60)
-            self.timer_updated.emit(mins, secs)
+            self.timer_updated.emit(int(mins), int(secs))
             time.sleep(1)
             total_seconds -= 1
         
@@ -122,59 +147,95 @@ class FocusGuard(QObject):
         return total_seconds <= 0 and self.is_active and not self.stop_event.is_set()
 
     def run_session_cycle(self):
-        """Manages the cycle between focus and break sessions."""
-        logging.info("Session cycle started.")
+        """Manages the new session cycle: (Focus/2) → Break → (Focus/2) → End"""
+        logging.info("Session cycle started with new timer logic.")
+        
         while self.is_active and not self.stop_event.is_set():
-            # --- Focus Session ---
-            self.is_focus_session = True
-            self.is_active_monitoring = True # Activate monitoring for focus
-            self.status_changed.emit("Focus session in progress")
-            logging.info("Entering Focus Session.")
             
-            # Run the focus timer
-            if self._run_single_timer(self.focus_duration, 'focus'):
-                logging.info("Focus session completed.")
-                if not self.is_active or self.stop_event.is_set():
-                    break # Stop if session was cancelled during focus timer
+            # --- First Focus Session (Part 1) ---
+            if self.current_session_part == 1:
+                self.is_focus_session = True
+                self.is_active_monitoring = True
+                self.status_changed.emit(f"Focus Session 1/2 - {self.single_focus_duration:.1f} min")
+                logging.info("Entering First Focus Session (1/2).")
                 
-                # --- Break Session ---
+                if self._run_single_timer(self.single_focus_duration, 'focus part 1'):
+                    logging.info("First focus session completed.")
+                    self.current_session_part = 2
+                    if not self.is_active or self.stop_event.is_set():
+                        break
+                else:
+                    logging.info("First focus session stopped early.")
+                    break
+            
+            # --- Break Session ---
+            elif self.current_session_part == 2:
                 self.is_focus_session = False
-                self.is_active_monitoring = False # Deactivate monitoring for break
-                self.status_changed.emit("Break session!")
+                self.is_active_monitoring = False
+                self.status_changed.emit(f"Break Time - {self.break_duration} min")
                 logging.info("Entering Break Session.")
-
-                # Run the break timer
+                
                 if self._run_single_timer(self.break_duration, 'break'):
-                    logging.info("Break session completed. Returning to Focus.")
-                    # Loop will continue to start another focus session
+                    logging.info("Break session completed.")
+                    self.current_session_part = 3
+                    if not self.is_active or self.stop_event.is_set():
+                        break
                 else:
                     logging.info("Break session stopped early.")
-                    break # Stop if session was cancelled during break timer
-            else:
-                logging.info("Focus session stopped early.")
-                break # Stop if session was cancelled during focus timer
+                    break
+            
+            # --- Second Focus Session (Part 2) ---
+            elif self.current_session_part == 3:
+                self.is_focus_session = True
+                self.is_active_monitoring = True
+                self.status_changed.emit(f"Focus Session 2/2 - {self.single_focus_duration:.1f} min")
+                logging.info("Entering Second Focus Session (2/2).")
+                
+                if self._run_single_timer(self.single_focus_duration, 'focus part 2'):
+                    logging.info("Second focus session completed. Session finished!")
+                    self.status_changed.emit("Session completed successfully!")
+                    break  # Session is complete
+                else:
+                    logging.info("Second focus session stopped early.")
+                    break
         
         logging.info("Session cycle finished.")
-        self.stop_session() # Ensure full stop if loop exits
+        # Clean up from within the timer thread without joining itself
+        self._cleanup_session()
+
+    def _cleanup_session(self):
+        """Internal cleanup method called from timer thread"""
+        self.is_active = False
+        self.stop_event.set()
+        self.current_session_part = 1
+        self.is_active_monitoring = False
+        
+        success_msg = "Session finished."
+        self.session_stopped.emit(success_msg)
+        logging.info(success_msg)
 
     def stop_session(self):
-        """Stop focus session and clean up threads."""
+        """Stop focus session and clean up threads (called from UI thread)."""
         if self.is_active:
             self.is_active = False
             self.stop_event.set() # Signal threads to stop
             
             logging.info("Stopping session, waiting for threads to join.")
             
-            # Wait for threads to finish
+            # Wait for threads to finish (only if we're not in the timer thread)
             if self.monitor_thread and self.monitor_thread.is_alive():
                 self.monitor_thread.join(timeout=2.0)
                 if self.monitor_thread.is_alive():
                     logging.warning("Monitor thread did not terminate gracefully.")
             
-            if self.timer_thread and self.timer_thread.is_alive():
+            if self.timer_thread and self.timer_thread.is_alive() and self.timer_thread != threading.current_thread():
                 self.timer_thread.join(timeout=2.0)
                 if self.timer_thread.is_alive():
                     logging.warning("Timer thread did not terminate gracefully.")
+            
+            # Reset session state
+            self.current_session_part = 1
+            self.is_active_monitoring = False
             
             success_msg = "Session stopped."
             self.session_stopped.emit(success_msg)
@@ -189,17 +250,29 @@ class FocusGuard(QObject):
         logging.info("Process monitoring thread started.")
         blocked_count = 0
         
+        # Create a set of allowed process names for faster lookup
+        allowed_process_names = set(p.lower() for p in self.allowed_processes)
+        
         while not self.stop_event.is_set():
             if self.is_active_monitoring: # Only monitor if this flag is True
                 try:
-                    current_processes = [p.name().lower() for p in psutil.process_iter(['name'])]
-                    
-                    for process in self.block_list:
-                        if process.lower() in current_processes:
-                            if self.terminate_process(process):
+                    # Get current running processes
+                    for proc in psutil.process_iter(['name']):
+                        process_name = proc.name()
+                        
+                        # Only terminate if process is in block list AND not in allowed list
+                        if (process_name in self.block_list and 
+                            process_name.lower() not in allowed_process_names):
+                            
+                            try:
+                                proc.terminate()
                                 blocked_count += 1
-                                self.app_blocked.emit(process)
-                                logging.info(f"Blocked: {process}")
+                                self.app_blocked.emit(process_name)
+                                logging.info(f"Blocked: {process_name}")
+                            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
+                                logging.warning(f"Termination failed for {process_name}: {e}")
+                            except Exception as e:
+                                logging.error(f"Unexpected termination error for {process_name}: {e}")
                     
                 except Exception as e:
                     logging.error(f"Monitoring error: {e}")
@@ -240,4 +313,3 @@ class FocusGuard(QObject):
         except Exception as e:
             logging.error(f"Add app error: {e}")
             return False
-
