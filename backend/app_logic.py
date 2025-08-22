@@ -300,6 +300,7 @@ class FocusGuard(QObject):
 
     def get_app_list(self):
         """Get list of apps with display names."""
+        
         return list(self.app_mappings.keys())
 
     def add_custom_app(self, display_name, process_name):

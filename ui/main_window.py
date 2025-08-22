@@ -283,6 +283,7 @@ class MainWindow(QMainWindow):
         self.focus_guard.status_changed.connect(self.status_text.setText)
         
     def load_apps(self):
+        # while self.focus_guard.start_session:
         app_list = self.focus_guard.get_app_list()
         row, col = 0, 0
         for app in app_list:
