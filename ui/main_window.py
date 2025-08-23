@@ -168,14 +168,14 @@ class MainWindow(QMainWindow):
         self.start_btn.clicked.connect(self.start_session)
         sidebar_layout.addWidget(self.start_btn)
         
-        self.stop_btn = QPushButton("⏹️ Stop Session")
-        self.stop_btn.setStyleSheet(
-            "background-color: #e9ecef; font-weight: bold;"
-        )
-        self.stop_btn.setFixedHeight(50)
-        self.stop_btn.clicked.connect(self.stop_session)
-        self.stop_btn.setVisible(False)
-        sidebar_layout.addWidget(self.stop_btn)
+        # self.stop_btn = QPushButton("⏹️ Stop Session")
+        # self.stop_btn.setStyleSheet(
+        #     "background-color: #e9ecef; font-weight: bold;"
+        # )
+        # self.stop_btn.setFixedHeight(50)
+        # self.stop_btn.clicked.connect(self.stop_session)
+        # self.stop_btn.setVisible(False)
+        # sidebar_layout.addWidget(self.stop_btn)
         
         sidebar_layout.addStretch()
         
@@ -283,6 +283,7 @@ class MainWindow(QMainWindow):
         self.focus_guard.status_changed.connect(self.status_text.setText)
         
     def load_apps(self):
+        # while self.focus_guard.start_session:
         app_list = self.focus_guard.get_app_list()
         row, col = 0, 0
         for app in app_list:
@@ -366,14 +367,14 @@ class MainWindow(QMainWindow):
         
     def on_session_started(self, message):
         self.start_btn.setVisible(False)
-        self.stop_btn.setVisible(True)
+        # self.stop_btn.setVisible(True)
         self.status_dot.setStyleSheet("background-color: #2ecc71; border-radius: 6px;")
         self.status_text.setText("Focus session in progress")
         QMessageBox.information(self, "Session Started", message)
         
     def on_session_stopped(self, message):
         self.start_btn.setVisible(True)
-        self.stop_btn.setVisible(False)
+        # self.stop_btn.setVisible(False)
         self.status_dot.setStyleSheet("background-color: #e74c3c; border-radius: 6px;")
         self.status_text.setText("Focus session stopped")
         # Reset to show first focus session time
