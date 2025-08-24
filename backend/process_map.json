@@ -7,11 +7,12 @@
   "Outlook": "OUTLOOK.EXE",
   "Steam": "steam.exe",
   "WhatsApp": "WhatsApp.exe",
-
   "Twitter": "Twitter.exe",
   "Instagram": "Instagram.exe",
   "YouTube": "chrome.exe",
   "Discord": "Discord.exe",
   "Calculator": "Calculator.exe",
-  "Clock": "Clock.exe"
+  "Clock": "Clock.exe",
+  "Firefox": "firefox.exe",
+  "VLC media player": "vlc.exe"
 }

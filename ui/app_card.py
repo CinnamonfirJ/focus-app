@@ -1,5 +1,5 @@
 # Update ui/app_card.py
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QColor
 
@@ -34,6 +34,7 @@ class AppCard(QWidget):
             padding: 5px;
             background-color: white;
         """)
+    
         layout.addWidget(self.name_label)
         
         # Set initial style
@@ -53,10 +54,13 @@ class AppCard(QWidget):
         """Update widget appearance based on selection state"""
         # border_color = "red" if self.is_selected else "white"
         # border_width = "3px" if self.is_selected else "2px"
-        bgcolor = "blue" if self.is_selected else "white"
+        bgcolor = "#939B9B"  if self.is_selected else "white"
+       
         self.name_label.setStyleSheet(f"""
             font-weight: bold; 
             padding: 5px;
+            
+            border-radius: 10px;
             background-color: {bgcolor};
         """)
         # self.setStyleSheet(f"""
@@ -69,3 +73,5 @@ class AppCard(QWidget):
         #         border-color: #3498db;
         #     }}
         # """)
+        
+        
