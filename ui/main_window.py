@@ -1,15 +1,23 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QSpinBox, QGridLayout, QScrollArea, QFrame,
     QSizePolicy, QMessageBox, QSpacerItem
 )
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QFont, QPixmap,QPalette, QColor
+from PyQt5.QtGui import QFont, QPixmap, QPalette, QColor, QIcon
 from PyQt5.QtWidgets import QInputDialog
 
 from backend.app_logic import FocusGuard
 from .app_card import AppCard
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    # When running in PyInstaller bundle, sys._MEIPASS points to temp folder
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    # When running normally (dev), just use current working directory
+    return os.path.join(os.path.abspath("."), relative_path)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -32,6 +40,10 @@ class MainWindow(QMainWindow):
         
     def init_ui(self):
         self.setWindowTitle("FocusGuard - Distraction Blocker")
+        # Use resource_path for icon
+        icon_path = resource_path("assets/cat_icon.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
         self.setFixedSize(900, 650)
         
         main_widget = QWidget()
@@ -258,12 +270,27 @@ class MainWindow(QMainWindow):
         content_layout.setContentsMargins(30, 30, 30, 30)
         content_layout.setSpacing(15)
         
-        # Apps title
-        self.apps_title = QLabel("📱 Select Apps to Allow")
-        self.apps_title.setAlignment(Qt.AlignCenter)
+        # Container layout for the icon + text
+        title_layout = QHBoxLayout()
 
-        self.apps_title.setFont(QFont("Segoe UI", 14, QFont.Bold))
-        content_layout.addWidget(self.apps_title)
+        # --- Icon label ---
+        icon_label = QLabel()
+        icon_pixmap = QPixmap(resource_path("assets/cat_working.png"))  # your image
+        icon_pixmap = icon_pixmap.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation)  
+        icon_label.setPixmap(icon_pixmap)
+
+        # --- Text label ---
+        title_text = QLabel("Select Apps to Allow")
+        title_text.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        title_text.setAlignment(Qt.AlignCenter)
+
+        # Add both into layout
+        title_layout.addWidget(icon_label)
+        title_layout.addWidget(title_text)
+        title_layout.setAlignment(Qt.AlignCenter)  # centers both together
+
+        # Add to your content layout
+        content_layout.addLayout(title_layout)
         
         # Description
         self.desc = QLabel(
@@ -350,12 +377,12 @@ class MainWindow(QMainWindow):
         
     def load_placeholder_images(self):
         """Load placeholder images for session mode"""
-        # Store multiple image paths for variety
+        # Store multiple image paths for variety - using resource_path
         self.placeholder_images = [
-            "assets/cat_working.png",     # Cat with laptop
-            "assets/coffee_break.png",    # Coffee cup
-            # "assets/focus_mode.png",      # Focus icon
-            # "assets/meditation.png",      # Meditation figure
+            resource_path("assets/cat_working.png"),     # Cat with laptop
+            resource_path("assets/coffee_break.png"),    # Coffee cup
+            resource_path("assets/focus_mode.png"),      # Focus icon
+            resource_path("assets/meditation.png"),      # Meditation figure
         ]
         self.current_image_index = 0
         
@@ -369,28 +396,42 @@ class MainWindow(QMainWindow):
             if hasattr(self.focus_guard, 'is_focus_session'):
                 if self.focus_guard.is_focus_session:
                     # Focus mode - use cat or focus image
-                    image_path = "assets/cat_working.png"
+                    image_path = resource_path("assets/cat_working.png")
                     self.placeholder_text.setText("Focus session in progress!\nStay focused and productive! 🎯")
                 else:
                     # Break mode - use coffee image
-                    image_path = "assets/coffee_break.png"
+                    image_path = resource_path("assets/coffee_break.png")
                     self.placeholder_text.setText("Break time! ☕\nRelax and recharge for the next session.")
             else:
-                image_path = "assets/focus_mode.png"
+                image_path = resource_path("assets/focus_mode.png")
             
-            pixmap = QPixmap(image_path)
-            if not pixmap.isNull():
-                # Scale image to fit nicely
-                scaled_pixmap = pixmap.scaled(300, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                self.placeholder_image.setPixmap(scaled_pixmap)
+            # Check if file exists before loading
+            if os.path.exists(image_path):
+                pixmap = QPixmap(image_path)
+                if not pixmap.isNull():
+                    # Scale image to fit nicely
+                    scaled_pixmap = pixmap.scaled(300, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                    self.placeholder_image.setPixmap(scaled_pixmap)
+                else:
+                    # Fallback to emoji if image can't be loaded
+                    self.set_placeholder_emoji()
             else:
-                # Fallback to emoji if image not found
-                self.placeholder_image.setText("🐱‍💻" if self.focus_guard.is_focus_session else "☕")
-                self.placeholder_image.setFont(QFont("Segoe UI", 72))
-        except:
-            # Fallback to emoji
+                # File doesn't exist, use emoji
+                self.set_placeholder_emoji()
+        except Exception as e:
+            # Fallback to emoji on any error
+            print(f"Error loading placeholder image: {e}")
+            self.set_placeholder_emoji()
+    
+    def set_placeholder_emoji(self):
+        """Set emoji as placeholder when image is not available"""
+        if hasattr(self.focus_guard, 'is_focus_session') and self.focus_guard.is_focus_session:
+            self.placeholder_image.setText("🐱‍💻")
+        elif hasattr(self.focus_guard, 'is_focus_session') and not self.focus_guard.is_focus_session:
+            self.placeholder_image.setText("☕")
+        else:
             self.placeholder_image.setText("🎯")
-            self.placeholder_image.setFont(QFont("Segoe UI", 72))
+        self.placeholder_image.setFont(QFont("Segoe UI", 72))
     
     def toggle_session_mode(self, session_active):
         """Toggle between app selection and session placeholder"""
