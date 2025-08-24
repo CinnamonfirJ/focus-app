@@ -1,2 +1,39 @@
-2025-08-24 12:16:19,256 - INFO - Loaded 16 app mappings
-2025-08-24 12:16:19,256 - INFO - FocusGuard initialized
+2025-08-24 12:45:26,466 - INFO - Loaded 16 app mappings
+2025-08-24 12:45:26,466 - INFO - FocusGuard initialized
+2025-08-24 12:45:37,913 - INFO - Session setup | Total Work: 5 mins, Break: 2 mins
+2025-08-24 12:45:37,914 - INFO - Focus Session Time: 3 mins, Each Focus: 1.5 mins
+2025-08-24 12:45:37,914 - INFO - Allowed: ['code.exe', 'chrome.exe']
+2025-08-24 12:45:37,915 - INFO - Blocking: ['EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe', 'firefox.exe', 'vlc.exe']
+2025-08-24 12:45:37,915 - INFO - Process monitoring thread started.
+2025-08-24 12:45:37,953 - INFO - Session cycle started with new timer logic.
+2025-08-24 12:45:37,986 - INFO - Entering First Focus Session (1/2).
+2025-08-24 12:45:38,013 - INFO - Starting focus part 1 timer for 1.5 minutes (90 seconds).
+2025-08-24 12:45:40,175 - INFO - Focus session started successfully.
+2025-08-24 12:45:40,221 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:46:05,389 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:46:15,479 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:46:25,533 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:46:50,665 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:46:55,701 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:47:00,726 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:47:05,754 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:47:08,143 - INFO - First focus session completed.
+2025-08-24 12:47:08,143 - INFO - Entering Break Session.
+2025-08-24 12:47:08,144 - INFO - Starting break timer for 2 minutes (120 seconds).
+2025-08-24 12:49:08,341 - INFO - Break session completed.
+2025-08-24 12:49:08,341 - INFO - Entering Second Focus Session (2/2).
+2025-08-24 12:49:08,342 - INFO - Starting focus part 2 timer for 1.5 minutes (90 seconds).
+2025-08-24 12:49:10,805 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:49:15,838 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:49:20,882 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:49:40,968 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:49:45,991 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:49:51,021 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:49:56,046 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:50:01,067 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:50:31,227 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:50:36,251 - INFO - Blocked: WhatsApp.exe
+2025-08-24 12:50:38,472 - INFO - Second focus session completed. Session finished!
+2025-08-24 12:50:38,472 - INFO - Session cycle finished.
+2025-08-24 12:50:38,472 - INFO - Session finished.
+2025-08-24 12:50:41,254 - INFO - Process monitoring thread stopped | Total blocked: 18

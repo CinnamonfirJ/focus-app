@@ -270,27 +270,24 @@ class MainWindow(QMainWindow):
         content_layout.setContentsMargins(30, 30, 30, 30)
         content_layout.setSpacing(15)
         
-        # Container layout for the icon + text
-        title_layout = QHBoxLayout()
+        # Apps title
+        self.apps_title = QLabel()
 
-        # --- Icon label ---
-        icon_label = QLabel()
-        icon_pixmap = QPixmap(resource_path("assets/cat_working.png"))  # your image
-        icon_pixmap = icon_pixmap.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation)  
-        icon_label.setPixmap(icon_pixmap)
+        # Load and scale icon
+        icon = QPixmap(resource_path("assets/cat_working.png"))
+        icon = icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
-        # --- Text label ---
-        title_text = QLabel("Select Apps to Allow")
-        title_text.setFont(QFont("Segoe UI", 14, QFont.Bold))
-        title_text.setAlignment(Qt.AlignCenter)
+        # Set combined icon + text using HTML
+        self.apps_title.setText(
+            f'<img src="{resource_path("assets/cat_working.png")}" width="24" height="24">  Select Apps to Allow'
+        )
 
-        # Add both into layout
-        title_layout.addWidget(icon_label)
-        title_layout.addWidget(title_text)
-        title_layout.setAlignment(Qt.AlignCenter)  # centers both together
+        # Font and alignment
+        self.apps_title.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        self.apps_title.setAlignment(Qt.AlignCenter)
 
-        # Add to your content layout
-        content_layout.addLayout(title_layout)
+        # Add to layout
+        content_layout.addWidget(self.apps_title)
         
         # Description
         self.desc = QLabel(

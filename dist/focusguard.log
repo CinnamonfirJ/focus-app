@@ -1,3 +1,11 @@
-2025-08-24 12:20:17,934 - INFO - Loaded 16 app mappings
-2025-08-24 12:20:17,934 - INFO - FocusGuard initialized
-2025-08-24 12:22:41,267 - INFO - Added custom app: claude -> claude.exe
+2025-08-24 12:24:39,004 - INFO - Loaded 16 app mappings
+2025-08-24 12:24:39,004 - INFO - FocusGuard initialized
+2025-08-24 12:25:01,309 - INFO - Added custom app: claude -> claude.exe
+2025-08-24 12:25:12,662 - INFO - Session setup | Total Work: 5 mins, Break: 2 mins
+2025-08-24 12:25:12,663 - INFO - Focus Session Time: 3 mins, Each Focus: 1.5 mins
+2025-08-24 12:25:12,663 - INFO - Allowed: ['code.exe', 'chrome.exe', 'claude.exe']
+2025-08-24 12:25:12,663 - INFO - Blocking: ['EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe', 'firefox.exe', 'vlc.exe']
+2025-08-24 12:25:12,664 - INFO - Process monitoring thread started.
+2025-08-24 12:25:12,679 - INFO - Session cycle started with new timer logic.
+2025-08-24 12:25:12,705 - INFO - Entering First Focus Session (1/2).
+2025-08-24 12:25:12,732 - INFO - Starting focus part 1 timer for 1.5 minutes (90 seconds).
