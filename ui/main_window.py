@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
     QSizePolicy, QMessageBox, QSpacerItem
 )
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QFont, QPixmap
+from PyQt5.QtGui import QFont, QPixmap,QPalette, QColor
 from PyQt5.QtWidgets import QInputDialog
 
 from backend.app_logic import FocusGuard
@@ -44,6 +44,13 @@ class MainWindow(QMainWindow):
         # Time input
         time_layout = QHBoxLayout()
         self.time_input = QSpinBox()
+        self.time_input.setStyleSheet("""
+    QSpinBox {
+        background-color: #F0F0F0;
+        color: black;
+    }
+""")
+
         self.time_input.setRange(5, 240)
         self.time_input.setValue(30)
         self.time_input.setFixedHeight(40)
@@ -51,11 +58,32 @@ class MainWindow(QMainWindow):
         time_layout.addWidget(self.time_input)
         
         plus_btn = QPushButton("+")
+        plus_btn.setStyleSheet(f"""
+    QPushButton {{
+        background-color: #939B9B;   /* normal state */
+        color: black;
+    }}
+    QPushButton:hover {{
+        background-color: #7f8989;   /* slightly darker on hover */
+    }}
+""")
+
         plus_btn.setFixedSize(40, 40)
         plus_btn.clicked.connect(lambda: self.time_input.setValue(self.time_input.value() + 1))
         time_layout.addWidget(plus_btn)
         
         minus_btn = QPushButton("-")
+        minus_btn.setStyleSheet(f"""
+    QPushButton {{
+        background-color: #939B9B;   /* normal state */
+        color: black;
+    }}
+    QPushButton:hover {{
+        background-color: #7f8989;   /* slightly darker on hover */
+    }}
+""")
+        
+    
         minus_btn.setFixedSize(40, 40)
         minus_btn.clicked.connect(lambda: self.time_input.setValue(self.time_input.value() - 1))
         time_layout.addWidget(minus_btn)
@@ -99,6 +127,12 @@ class MainWindow(QMainWindow):
 
         break_time_layout = QHBoxLayout()
         self.break_time_input = QSpinBox()
+        self.break_time_input.setStyleSheet("""
+    QSpinBox {
+        background-color: #F0F0F0;
+        color: black;
+    }
+""")
         self.break_time_input.setRange(1, 30)
         self.break_time_input.setValue(5)
         self.break_time_input.setFixedHeight(40)
@@ -106,11 +140,29 @@ class MainWindow(QMainWindow):
         break_time_layout.addWidget(self.break_time_input)
         
         break_plus_btn = QPushButton("+")
+        break_plus_btn.setStyleSheet(f"""
+    QPushButton {{
+        background-color: #939B9B;   /* normal state */
+        color: black;
+    }}
+    QPushButton:hover {{
+        background-color: #7f8989;   /* slightly darker on hover */
+    }}
+""")
         break_plus_btn.setFixedSize(40, 40)
         break_plus_btn.clicked.connect(lambda: self.break_time_input.setValue(self.break_time_input.value() + 1))
         break_time_layout.addWidget(break_plus_btn)
         
         break_minus_btn = QPushButton("-")
+        break_minus_btn.setStyleSheet(f"""
+    QPushButton {{
+        background-color: #939B9B;   /* normal state */
+        color: black;
+    }}
+    QPushButton:hover {{
+        background-color: #7f8989;   /* slightly darker on hover */
+    }}
+""")
         break_minus_btn.setFixedSize(40, 40)
         break_minus_btn.clicked.connect(lambda: self.break_time_input.setValue(self.break_time_input.value() - 1))
         break_time_layout.addWidget(break_minus_btn)

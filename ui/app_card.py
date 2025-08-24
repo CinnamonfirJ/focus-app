@@ -54,11 +54,13 @@ class AppCard(QWidget):
         """Update widget appearance based on selection state"""
         # border_color = "red" if self.is_selected else "white"
         # border_width = "3px" if self.is_selected else "2px"
-        bgcolor = "grey"if self.is_selected else "white"
+        bgcolor = "#939B9B"  if self.is_selected else "white"
        
         self.name_label.setStyleSheet(f"""
             font-weight: bold; 
             padding: 5px;
+            
+            border-radius: 10px;
             background-color: {bgcolor};
         """)
         # self.setStyleSheet(f"""
