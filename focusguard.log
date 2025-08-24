@@ -1,10 +1,2 @@
-2025-08-24 12:38:59,288 - INFO - Loaded 16 app mappings
-2025-08-24 12:38:59,288 - INFO - FocusGuard initialized
-2025-08-24 12:39:10,369 - INFO - Session setup | Total Work: 5 mins, Break: 1 mins
-2025-08-24 12:39:10,369 - INFO - Focus Session Time: 4 mins, Each Focus: 2.0 mins
-2025-08-24 12:39:10,369 - INFO - Allowed: ['code.exe']
-2025-08-24 12:39:10,370 - INFO - Blocking: ['chrome.exe', 'EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'chrome.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe', 'firefox.exe', 'vlc.exe']
-2025-08-24 12:39:10,371 - INFO - Process monitoring thread started.
-2025-08-24 12:39:10,386 - INFO - Session cycle started with new timer logic.
-2025-08-24 12:39:10,395 - INFO - Entering First Focus Session (1/2).
-2025-08-24 12:39:10,395 - INFO - Starting focus part 1 timer for 2.0 minutes (120 seconds).
+2025-08-24 13:38:58,249 - INFO - Loaded 17 app mappings
+2025-08-24 13:38:58,249 - INFO - FocusGuard initialized

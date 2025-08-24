@@ -14,5 +14,6 @@
   "Calculator": "Calculator.exe",
   "Clock": "Clock.exe",
   "Firefox": "firefox.exe",
-  "VLC media player": "vlc.exe"
+  "VLC media player": "vlc.exe",
+  "Visual Studio Code": "code.exe"
 }
