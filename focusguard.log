@@ -1,13 +1,13 @@
-2025-08-22 19:26:25,222 - INFO - Loaded 14 app mappings
-2025-08-22 19:26:25,223 - INFO - FocusGuard initialized
-2025-08-22 19:26:31,565 - INFO - Session setup | Total Work: 30 mins, Break: 5 mins
-2025-08-22 19:26:31,566 - INFO - Focus Session Time: 25 mins, Each Focus: 12.5 mins
-2025-08-22 19:26:31,566 - INFO - Allowed: ['code.exe', 'chrome.exe']
-2025-08-22 19:26:31,566 - INFO - Blocking: ['EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe']
-2025-08-22 19:26:31,568 - INFO - Process monitoring thread started.
-2025-08-22 19:26:31,591 - INFO - Session cycle started with new timer logic.
-2025-08-22 19:26:31,591 - INFO - Entering First Focus Session (1/2).
-2025-08-22 19:26:31,592 - INFO - Starting focus part 1 timer for 12.5 minutes (750 seconds).
-2025-08-22 19:26:33,457 - INFO - Focus session started successfully.
-2025-08-22 19:26:33,961 - INFO - Blocked: WhatsApp.exe
-2025-08-22 19:26:39,336 - INFO - Blocked: WhatsApp.exe
+2025-08-22 19:45:01,514 - INFO - Loaded 14 app mappings
+2025-08-22 19:45:01,515 - INFO - FocusGuard initialized
+2025-08-22 19:45:36,642 - INFO - Session setup | Total Work: 5 mins, Break: 2 mins
+2025-08-22 19:45:36,642 - INFO - Focus Session Time: 3 mins, Each Focus: 1.5 mins
+2025-08-22 19:45:36,642 - INFO - Allowed: ['code.exe', 'chrome.exe']
+2025-08-22 19:45:36,643 - INFO - Blocking: ['EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe']
+2025-08-22 19:45:36,643 - INFO - Process monitoring thread started.
+2025-08-22 19:45:36,665 - INFO - Session cycle started with new timer logic.
+2025-08-22 19:45:36,702 - INFO - Entering First Focus Session (1/2).
+2025-08-22 19:45:36,734 - INFO - Starting focus part 1 timer for 1.5 minutes (90 seconds).
+2025-08-22 19:45:38,347 - INFO - Focus session started successfully.
+2025-08-22 19:45:38,680 - INFO - Blocked: WhatsApp.exe
+2025-08-22 19:45:53,990 - INFO - Blocked: WhatsApp.exe
