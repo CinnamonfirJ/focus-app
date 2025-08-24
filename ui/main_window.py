@@ -260,6 +260,8 @@ class MainWindow(QMainWindow):
         
         # Apps title
         self.apps_title = QLabel("📱 Select Apps to Allow")
+        self.apps_title.setAlignment(Qt.AlignCenter)
+
         self.apps_title.setFont(QFont("Segoe UI", 14, QFont.Bold))
         content_layout.addWidget(self.apps_title)
         
@@ -268,6 +270,7 @@ class MainWindow(QMainWindow):
             "Select applications you want to work with. All other apps will be "
             "blocked during your focus sessions."
         )
+        self.desc.setAlignment(Qt.AlignCenter)
         self.desc.setWordWrap(True)
         content_layout.addWidget(self.desc)
         

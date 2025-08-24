@@ -1,37 +1,43 @@
-2025-08-24 09:33:18,301 - INFO - Loaded 16 app mappings
-2025-08-24 09:33:18,302 - INFO - FocusGuard initialized
-2025-08-24 09:33:36,499 - INFO - Session setup | Total Work: 5 mins, Break: 1 mins
-2025-08-24 09:33:36,500 - INFO - Focus Session Time: 4 mins, Each Focus: 2.0 mins
-2025-08-24 09:33:36,500 - INFO - Allowed: ['code.exe']
-2025-08-24 09:33:36,500 - INFO - Blocking: ['chrome.exe', 'EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'chrome.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe', 'firefox.exe', 'vlc.exe']
-2025-08-24 09:33:36,502 - INFO - Process monitoring thread started.
-2025-08-24 09:33:36,522 - INFO - Session cycle started with new timer logic.
-2025-08-24 09:33:36,522 - INFO - Entering First Focus Session (1/2).
-2025-08-24 09:33:36,523 - INFO - Starting focus part 1 timer for 2.0 minutes (120 seconds).
-2025-08-24 09:33:37,285 - INFO - Blocked: WhatsApp.exe
-2025-08-24 09:33:39,025 - INFO - Focus session started successfully.
-2025-08-24 09:35:36,673 - INFO - First focus session completed.
-2025-08-24 09:35:36,674 - INFO - Entering Break Session.
-2025-08-24 09:35:36,674 - INFO - Starting break timer for 1 minutes (60 seconds).
-2025-08-24 09:36:36,743 - INFO - Break session completed.
-2025-08-24 09:36:36,744 - INFO - Entering Second Focus Session (2/2).
-2025-08-24 09:36:36,744 - INFO - Starting focus part 2 timer for 2.0 minutes (120 seconds).
-2025-08-24 09:36:37,705 - INFO - Blocked: WhatsApp.exe
-2025-08-24 09:37:02,820 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,824 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,825 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,827 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,829 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,830 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,832 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,835 - INFO - Blocked: WhatsApp.exe
-2025-08-24 09:37:02,836 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,839 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:02,840 - INFO - Blocked: firefox.exe
-2025-08-24 09:37:27,908 - INFO - Blocked: vlc.exe
-2025-08-24 09:37:37,945 - INFO - Blocked: WhatsApp.exe
-2025-08-24 09:37:42,969 - INFO - Blocked: WhatsApp.exe
-2025-08-24 09:38:36,912 - INFO - Second focus session completed. Session finished!
-2025-08-24 09:38:36,912 - INFO - Session cycle finished.
-2025-08-24 09:38:36,913 - INFO - Session finished.
-2025-08-24 09:38:38,123 - INFO - Process monitoring thread stopped | Total blocked: 16
+2025-08-24 09:59:35,341 - INFO - Loaded 16 app mappings
+2025-08-24 09:59:35,341 - INFO - FocusGuard initialized
+2025-08-24 10:00:16,895 - INFO - Session setup | Total Work: 5 mins, Break: 1 mins
+2025-08-24 10:00:16,895 - INFO - Focus Session Time: 4 mins, Each Focus: 2.0 mins
+2025-08-24 10:00:16,895 - INFO - Allowed: ['code.exe']
+2025-08-24 10:00:16,895 - INFO - Blocking: ['chrome.exe', 'EXCEL.EXE', 'slack.exe', 'spotify.exe', 'OUTLOOK.EXE', 'steam.exe', 'WhatsApp.exe', 'Twitter.exe', 'Instagram.exe', 'chrome.exe', 'Discord.exe', 'Calculator.exe', 'Clock.exe', 'firefox.exe', 'vlc.exe']
+2025-08-24 10:00:16,896 - INFO - Process monitoring thread started.
+2025-08-24 10:00:16,911 - INFO - Session cycle started with new timer logic.
+2025-08-24 10:00:16,911 - INFO - Entering First Focus Session (1/2).
+2025-08-24 10:00:16,912 - INFO - Starting focus part 1 timer for 2.0 minutes (120 seconds).
+2025-08-24 10:00:17,474 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:00:19,129 - INFO - Focus session started successfully.
+2025-08-24 10:00:42,548 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:00:52,563 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:01:12,603 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:01:27,627 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:01:42,666 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:01:52,686 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:02:02,705 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:02:12,728 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:02:17,009 - INFO - First focus session completed.
+2025-08-24 10:02:17,010 - INFO - Entering Break Session.
+2025-08-24 10:02:17,010 - INFO - Starting break timer for 1 minutes (60 seconds).
+2025-08-24 10:03:17,060 - INFO - Break session completed.
+2025-08-24 10:03:17,061 - INFO - Entering Second Focus Session (2/2).
+2025-08-24 10:03:17,061 - INFO - Starting focus part 2 timer for 2.0 minutes (120 seconds).
+2025-08-24 10:03:17,753 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:03:27,775 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:03:42,808 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:03:47,828 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:03:52,836 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:03:52,837 - INFO - Blocked: firefox.exe
+2025-08-24 10:03:57,845 - INFO - Blocked: firefox.exe
+2025-08-24 10:03:57,846 - INFO - Blocked: firefox.exe
+2025-08-24 10:03:57,850 - INFO - Blocked: firefox.exe
+2025-08-24 10:03:57,851 - INFO - Blocked: firefox.exe
+2025-08-24 10:04:22,917 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:04:37,946 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:04:52,973 - INFO - Blocked: WhatsApp.exe
+2025-08-24 10:05:17,177 - INFO - Second focus session completed. Session finished!
+2025-08-24 10:05:17,178 - INFO - Session cycle finished.
+2025-08-24 10:05:17,178 - INFO - Session finished.
+2025-08-24 10:05:18,029 - INFO - Process monitoring thread stopped | Total blocked: 22
