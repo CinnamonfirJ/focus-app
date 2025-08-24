@@ -18,6 +18,17 @@ class MainWindow(QMainWindow):
         self.session_active = False  # Track session state
         self.init_ui()
         self.connect_signals()
+
+    def closeEvent(self, event):
+        if self.session_active:  # or check whatever flag marks the process
+            QMessageBox.warning(
+                self,
+                "Process Running",
+                "You cannot close the app while a process is running."
+            )
+            event.ignore()  # prevent closing
+        else:
+            event.accept()  # allow closing
         
     def init_ui(self):
         self.setWindowTitle("FocusGuard - Distraction Blocker")
